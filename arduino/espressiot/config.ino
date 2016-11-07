@@ -10,8 +10,8 @@
 
 #define BUF_SIZE 256
 
-const char* wifi_ssid = "Waldi";
-const char* wifi_pass = "hwfkws22";
+const char* wifi_ssid = "";
+const char* wifi_pass = "";
 
 bool prepareFS() {
   if (!SPIFFS.begin()) {
