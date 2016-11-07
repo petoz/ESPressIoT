@@ -6,7 +6,7 @@
 //
 
 #include <PID_v1.h>
-#define SIMULATION_MODE
+//#define SIMULATION_MODE
 
 //
 // STANDARD reset values based on Gaggia CC
@@ -58,6 +58,32 @@ void setup()
   gOutputPwr=0;
 
   Serial.begin(115200);
+
+  Serial.println("Mounting SPIFFS...");
+  if(!prepareFS()) {
+    Serial.println("Failed to mount SPIFFS !");
+  } else {
+    Serial.println("Mounted.");
+  }
+
+  if (!saveConfig()) {
+    Serial.println("Failed to save config");
+  } else {
+    Serial.println("Config saved");
+  }
+
+  Serial.println("Loading config...");
+  if (!loadConfig()) {
+    Serial.println("Failed to load config. Using default values and creating config...");
+    if (!saveConfig()) {
+     Serial.println("Failed to save config");
+    } else {
+      Serial.println("Config saved");
+    }
+  } else {
+    Serial.println("Config loaded");
+  }
+   
   Serial.println("Settin up PID...");
 
   // setup components

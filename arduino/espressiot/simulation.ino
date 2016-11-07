@@ -1,3 +1,10 @@
+//
+// ESPressIoT Controller for Espresso Machines
+// 2016 by Roman Schmitz
+//
+// Simple Simulation Code
+//
+
 #ifdef SIMULATION_MODE
 
 #define SIM_TIME 100
