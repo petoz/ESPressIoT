@@ -8,8 +8,8 @@
 #include <PID_v1.h>
 
 // WIFI
-#define WIFI_SSID "Cofcon"
-#define WIFI_PASS "cofcon4all"
+#define WIFI_SSID "ESPressIoT"
+#define WIFI_PASS "espresso4all"
 
 // options for special modules
 #define ENABLE_JSON
