@@ -77,4 +77,11 @@ bool saveConfig() {
   return true;
 }
 
+void resetConfig() {
+ gP=S_P; gI=S_I; gD=S_D;
+ gaP=S_aP; gaI=S_aI; gaD=S_aD;
+ gTargetTemp=S_TSET;
+ gOvershoot=S_TBAND;
+}
+
 #endif

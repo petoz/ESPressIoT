@@ -9,7 +9,7 @@
 
 // WIFI
 #define WIFI_SSID "Cofcon"
-#define WIFI_PASS "cofcon"
+#define WIFI_PASS "cofcon4all"
 
 // options for special modules
 #define ENABLE_JSON
@@ -54,11 +54,6 @@ unsigned long time_last=0;
 boolean tuning = false;
 boolean osmode = false;
 boolean poweroffMode = false;
-
-//
-// parameters for tuning loop
-//
-double aTuneStep=100.0, aTuneNoise=0.2;
 
 //
 // gloabl classes
@@ -137,11 +132,13 @@ void loop() {
   gInputTemp=getTemp();
 
   if(abs(time_now-time_last)>=PID_INTERVAL or time_last > time_now) {
-    if(tuning==true)
+    if(poweroffMode==true) {
+      gOutputPwr=0;
+      setHeatPowerPercentage(0);
+    }
+    else if(tuning==true)
     {
-      ESPPID.SetMode(MANUAL);
-      if(gInputTemp<(gTargetTemp-aTuneNoise)) setHeatPowerPercentage(aTuneStep);
-      else if(gInputTemp>(gTargetTemp+aTuneNoise)) setHeatPowerPercentage(0);      
+      tuning_loop();
     }
     else  {
       if( !osmode && abs(gTargetTemp-gInputTemp)>=gOvershoot ) {        
@@ -152,11 +149,7 @@ void loop() {
         ESPPID.SetTunings(gP,gI,gD);
         osmode=false;
       }
-      if(poweroffMode==true) {
-        gOutputPwr=0;
-        setHeatPowerPercentage(0);
-      }
-      else if(ESPPID.Compute()==true) {   
+      if(ESPPID.Compute()==true) {   
         setHeatPowerPercentage(gOutputPwr);
       }
     }        
