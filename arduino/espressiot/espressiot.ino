@@ -153,7 +153,8 @@ void loop() {
         osmode=false;
       }
       if(poweroffMode==true) {
-        setHeatPowerPercentage(0);;
+        gOutputPwr=0;
+        setHeatPowerPercentage(0);
       }
       else if(ESPPID.Compute()==true) {   
         setHeatPowerPercentage(gOutputPwr);
