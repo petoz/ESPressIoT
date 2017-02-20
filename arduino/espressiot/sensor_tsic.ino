@@ -10,7 +10,7 @@
 #include <TSIC.h>
 
 // pins for power and signal
-#define TSIC_SIG D4 // D4 pin of NodeMCU jsut in the right position
+#define TSIC_SIG D4 // D4 pin of NodeMCU just in the right position
 #define TSIC_SMP_TIME 100
 
 #define ACCURACY 0.1

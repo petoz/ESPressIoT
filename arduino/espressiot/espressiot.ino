@@ -6,7 +6,18 @@
 //
 
 #include <PID_v1.h>
-//#define SIMULATION_MODE
+
+// WIFI
+#define WIFI_SSID "Cofcon"
+#define WIFI_PASS "cofcon"
+
+// options for special modules
+#define ENABLE_JSON
+#define ENABLE_HTTP
+//#define ENABLE_MQTT
+
+// use simulation or real heater and sensors
+#define SIMULATION_MODE
 
 //
 // STANDARD reset values based on Gaggia CC
@@ -42,6 +53,7 @@ unsigned long time_last=0;
 
 boolean tuning = false;
 boolean osmode = false;
+boolean poweroffMode = false;
 
 //
 // parameters for tuning loop
@@ -66,11 +78,11 @@ void setup()
     Serial.println("Mounted.");
   }
 
-  if (!saveConfig()) {
+  /*if (!saveConfig()) {
     Serial.println("Failed to save config");
   } else {
     Serial.println("Config saved");
-  }
+  }*/
 
   Serial.println("Loading config...");
   if (!loadConfig()) {
@@ -85,6 +97,10 @@ void setup()
   }
    
   Serial.println("Settin up PID...");
+
+  #ifdef ENABLE_HTTP
+  setupWifiSrv();
+  #endif
 
   // setup components
   setupHeater();
@@ -136,13 +152,20 @@ void loop() {
         ESPPID.SetTunings(gP,gI,gD);
         osmode=false;
       }
-      if(ESPPID.Compute()==true) {   
+      if(poweroffMode==true) {
+        setHeatPowerPercentage(0);;
+      }
+      else if(ESPPID.Compute()==true) {   
         setHeatPowerPercentage(gOutputPwr);
-        serialStatus();
       }
     }        
   }
 
   updateHeater();
+  serialStatus();
+  
+  #ifdef ENABLE_HTTP
+  loopWifiSrv();
+  #endif
 }
 
