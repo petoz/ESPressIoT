@@ -8,8 +8,9 @@
 #include <PID_v1.h>
 
 // WIFI
-#define WIFI_SSID "Cofcon"
-#define WIFI_PASS "cofcon4all"
+//#define ENABLE_AP
+#define WIFI_SSID "HomeNetwork"
+#define WIFI_PASS "MyPassword"
 
 // options for special modules
 #define ENABLE_JSON

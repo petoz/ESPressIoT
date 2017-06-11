@@ -3,7 +3,7 @@
 // 2017 by Roman Schmitz
 //
 // Simple PID tuning procedure
-// bades on the blog entry http://brettbeauregard.com/blog/2012/01/arduino-pid-autotune-library/
+// based on the blog entry http://brettbeauregard.com/blog/2012/01/arduino-pid-autotune-library/
 //
 
 double aTuneStep=100.0, aTuneThres=0.2;
@@ -18,6 +18,8 @@ void tuning_on() {
   tune_time=0;
   tune_start=0;
   tune_count=0;
+  UpperCnt=0; LowerCnt=0;
+  AvgUpperT=0; AvgLowerT=0;
   ESPPID.SetMode(MANUAL);
   tuning=true;
 }

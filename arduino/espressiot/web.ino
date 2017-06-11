@@ -8,12 +8,15 @@
 #ifdef ENABLE_HTTP
 
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h> 
+#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266HTTPUpdateServer.h>
 
 ESP8266WebServer server(80);
-IPAddress apIP(10, 0, 0, 1);
-IPAddress netMsk(255, 0, 0, 0);
+ESP8266HTTPUpdateServer httpUpdater;
+
+//IPAddress apIP(10, 0, 0, 1);
+//IPAddress netMsk(255, 0, 0, 0);
 
 void handleNotFound() {
   String message = "File Not Found\n\n";
@@ -68,8 +71,9 @@ void handleConfig() {
   message += "<a href=\"./loadconf\"><button>Load Config</button></a><br/>\n";
   message += "<a href=\"./saveconf\"><button>Save Config</button></a><br/>\n";
   message += "<a href=\"./resetconf\"><button>Reset Config to Default</button></a><br/>\n";
+  message += "<a href=\"./update\"><button>Update Firmware</button></a><br/>\n";
   message += "<hr/>\n";
-  message += "<form action=\"set_tuning\">\nTuning Threshold (°C):<br>\n";
+  message += "<form action=\"set_tuning\">\nTuning Threshold (\°C):<br>\n";
   message += "<input type=\"text\" name=\"tunethres\" value=\"" + String(aTuneThres) +"\"><br>\n";
   message += "Tuning Power (heater)<br>\n";
   message += "<input type=\"text\" name=\"tunestep\" value=\"" + String(aTuneStep) + "\"><br><br>\n";
@@ -201,12 +205,30 @@ void handleTuningMode() {
 }
 
 void setupWifiSrv() {
-  WiFi.softAPConfig(apIP, apIP, netMsk);
-  WiFi.softAP(WIFI_SSID, WIFI_PASS);
-  IPAddress myIP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
-  Serial.println(myIP);
+//  WiFi.softAPConfig(apIP, apIP, netMsk);
+//  WiFi.softAP(WIFI_SSID, WIFI_PASS);
+//  IPAddress myIP = WiFi.softAPIP();
+//  Serial.print("AP IP address: ");
+//  Serial.println(myIP);
+
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.println("");
+  Serial.print("MAC address: ");
+  Serial.println(WiFi.macAddress());
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
   
+  Serial.println("");
+  Serial.print("Connected to ");
+  Serial.println("Waldi");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+ 
+  httpUpdater.setup(&server);
+  Serial.print("Updater running !");
   server.on("/", handleRoot);
   server.on("/config", handleConfig);
   server.on("/loadconf", handleLoadConfig);
