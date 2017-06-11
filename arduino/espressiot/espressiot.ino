@@ -8,9 +8,14 @@
 #include <PID_v1.h>
 
 // WIFI
+<<<<<<< HEAD
 //#define ENABLE_AP
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
+=======
+#define WIFI_SSID "ESPressIoT"
+#define WIFI_PASS "espresso4all"
+>>>>>>> d49f832b5f6da168456d42593516c8b52764f825
 
 // options for special modules
 #define ENABLE_JSON
