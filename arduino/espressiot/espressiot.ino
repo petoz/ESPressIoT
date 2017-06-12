@@ -8,7 +8,7 @@
 #include <PID_v1.h>
 
 // WIFI
-<<<<<<< HEAD
+
 //#define ENABLE_AP
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
