@@ -7,16 +7,11 @@
 
 #ifdef ENABLE_HTTP
 
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 
 ESP8266WebServer server(80);
 ESP8266HTTPUpdateServer httpUpdater;
-
-//IPAddress apIP(10, 0, 0, 1);
-//IPAddress netMsk(255, 0, 0, 0);
 
 void handleNotFound() {
   String message = "File Not Found\n\n";
@@ -204,28 +199,7 @@ void handleTuningMode() {
   server.send(200, "text/html", message);
 }
 
-void setupWifiSrv() {
-//  WiFi.softAPConfig(apIP, apIP, netMsk);
-//  WiFi.softAP(WIFI_SSID, WIFI_PASS);
-//  IPAddress myIP = WiFi.softAPIP();
-//  Serial.print("AP IP address: ");
-//  Serial.println(myIP);
-
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  Serial.println("");
-  Serial.print("MAC address: ");
-  Serial.println(WiFi.macAddress());
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println("Waldi");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+void setupWebSrv() {
  
   httpUpdater.setup(&server);
   Serial.print("Updater running !");
@@ -244,7 +218,7 @@ void setupWifiSrv() {
   Serial.println("HTTP server started");
 }
 
-void loopWifiSrv() {
+void loopWebSrv() {
   server.handleClient();
 }
 

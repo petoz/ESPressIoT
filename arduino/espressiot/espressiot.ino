@@ -6,20 +6,20 @@
 //
 
 #include <PID_v1.h>
+#include <ESP8266WiFi.h>
 
 // WIFI
 
-//#define ENABLE_AP
 #define WIFI_SSID "HomeNetwork"
 #define WIFI_PASS "MyPassword"
 
 // options for special modules
 #define ENABLE_JSON
 #define ENABLE_HTTP
-//#define ENABLE_MQTT
+#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
-#define SIMULATION_MODE
+//#define SIMULATION_MODE
 
 //
 // STANDARD reset values based on Gaggia CC
@@ -95,8 +95,27 @@ void setup()
    
   Serial.println("Settin up PID...");
 
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
+  Serial.println("");
+  Serial.print("MAC address: ");
+  Serial.println(WiFi.macAddress());
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  
+  Serial.println("");
+  Serial.println("WiFi connected.");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+
   #ifdef ENABLE_HTTP
-  setupWifiSrv();
+  setupWebSrv();
+  #endif
+  
+  #ifdef ENABLE_MQTT
+  setupMQTT();
   #endif
 
   // setup components
@@ -155,13 +174,20 @@ void loop() {
         setHeatPowerPercentage(gOutputPwr);
       }
     }        
+    
+    #ifdef ENABLE_MQTT
+    loopMQTT();
+    #endif
+    
+    serialStatus();
+    time_last=time_now;
   }
 
   updateHeater();
-  serialStatus();
   
   #ifdef ENABLE_HTTP
-  loopWifiSrv();
-  #endif
+  loopWebSrv();
+  #endif 
+  
 }
 
