@@ -28,7 +28,7 @@ void MQTT_reconnect() {
     clientId += String(random(0xffff), HEX);
     if (client.connect(clientId.c_str())) {
       Serial.println("connected");
-      client.subscribe("ESPressIoT/config/#");
+      client.subscribe("ESPressIoT/config/#", 1);
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());

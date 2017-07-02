@@ -27,7 +27,7 @@ void setupHeater() {
 void updateTempSensor() {
   if (abs(time_now - lastSensTime) >= SIM_TIME) {
       lastSensTime=time_now;
-      curTemp = curTemp + (heaterSavedState*SIM_T_HEAT*1e-3) - SIM_T_LOSS;
+      curTemp = (curTemp<SIM_T_START)?(SIM_T_START):(curTemp+(heaterSavedState*SIM_T_HEAT*1e-3)-SIM_T_LOSS);
   }  
 }
 
