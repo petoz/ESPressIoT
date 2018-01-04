@@ -16,7 +16,7 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 * MQTT-Interface (needs [PubSub-Client][4])
 * OTA-Flash enabled (over-the-air, flash firmware via upload in WWW-Interface)
 * Serial Interface for testing, debugging
-* JSON-Config in internal SPIFFS
+* JSON-Config in internal SPIFFS (uses [ArduinoJSON][5])
 * Re-Written auto-tuning-loop to optimize PID parameters
 * integrated simulation to test features and functionality
 
@@ -24,3 +24,4 @@ This work is based on my previous work with with IoT, MQTT and my small controll
 [2]: https://github.com/br3ttb/Arduino-PID-Library
 [3]: https://github.com/Schm1tz1/arduino-tsic
 [4]: https://github.com/knolleary/pubsubclient
+[5]: https://github.com/bblanchon/ArduinoJson
