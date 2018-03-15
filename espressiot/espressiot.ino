@@ -19,7 +19,11 @@
 //#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
-//#define SIMULATION_MODE
+#define SIMULATION_MODE
+
+// defines to select sensor types or interface parameters
+//#define SENS_TSIC
+#define SENS_DALLAS
 
 //
 // STANDARD reset values based on Gaggia CC
