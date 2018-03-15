@@ -14,7 +14,7 @@
 
 // pin for one-wire-bus
 //#define ONE_WIRE_BUS 10
-#define ONE_WIRE_BUS 4 //use D4 as input for ds18b20
+#define ONE_WIRE_BUS D4 //use D4 as input for ds18b20
 OneWire  ds(D4);  // on pin D4 (a 4.7K resistor is necessary)
 
 // index of sensor to be used, normally first sensor (index 0) is ised
@@ -24,7 +24,7 @@ OneWire  ds(D4);  // on pin D4 (a 4.7K resistor is necessary)
 #define DALLAS_SMP_TIME 200
 
 //OneWire oneWire(ONE_WIRE_BUS);
-OneWire oneWire(4);
+OneWire oneWire(D4);
 DallasTemperature sensors(&oneWire);
 
 float lastT = 0.0;
