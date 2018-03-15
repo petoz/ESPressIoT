@@ -10,13 +10,13 @@
 
 // WIFI
 
-#define WIFI_SSID "HomeNetwork"
-#define WIFI_PASS "MyPassword"
+#define WIFI_SSID "espwifi"
+#define WIFI_PASS "Passw0rd"
 
 // options for special modules
 #define ENABLE_JSON
 #define ENABLE_HTTP
-#define ENABLE_MQTT
+//#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
 //#define SIMULATION_MODE

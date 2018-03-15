@@ -6,6 +6,7 @@
 //
 
 #define HEAT_RELAY_PIN D5 // D5 + GND are close on NodeMCU
+#define HEAT_RELAY_PIN D1 // D1 on wemos D1
 
 float heatcycles; // the number of millis out of 1000 for the current heat amount (percent * 10)
 
