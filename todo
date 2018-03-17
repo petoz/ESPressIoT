@@ -1,0 +1,2 @@
+set first softap, then client
+http://arduino-esp8266.readthedocs.io/en/latest/esp8266wifi/soft-access-point-examples.html
