@@ -13,6 +13,12 @@
 ESP8266WebServer server(80);
 ESP8266HTTPUpdateServer httpUpdater;
 
+
+
+//Serial.print("Setting soft-AP configuration ... ");
+//
+//WiFi.softAP(silvia, Passw0rd, 1);
+//softAPConfig (staticIP, gateway, subnet);
 void handleNotFound() {
   String message = "File Not Found\n\n";
   message += "URI: ";
