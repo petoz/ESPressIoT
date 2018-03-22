@@ -14,15 +14,9 @@
 #define WIFI_PASS "Passw0rd"
 
 
-IPAddress local_IP(192,168,1,1);
-IPAddress gateway(192,168,4,9);
-IPAddress subnet(255,255,255,0);
-
-//Serial.print("Setting soft-AP configuration ... ");
-//  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
-//
-//
-
+/*IPAddress local_IP(192,168,0,1);
+IPAddress gateway(192,168,0,9);
+IPAddress subnet(255,255,255,0);*/
 
 // options for special modules
 #define ENABLE_JSON
@@ -79,17 +73,11 @@ boolean poweroffMode = false;
 //
 PID ESPPID(&gInputTemp, &gOutputPwr, &gTargetTemp, gP, gI, gD, DIRECT);
 
+
 void setup()
 {
-  WiFi.softAPConfig(local_IP, gateway, subnet);
-  WiFi.softAP("silvia","Passw0rd");
-  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
-  Serial.print("Setting soft-AP ... ");
-  //Serial.println(WiFi.softAP("ESPsoftAP_01") ? "Ready" : "Failed!");
-
-  gOutputPwr=0;
-
   Serial.begin(115200);
+
 
   Serial.println("Mounting SPIFFS...");
   if(!prepareFS()) {
@@ -97,6 +85,17 @@ void setup()
   } else {
     Serial.println("Mounted.");
   }
+  
+  //WiFi.softAPConfig(local_IP, gateway, subnet);
+  //WiFi.softAP("silvia","Passw0rd");
+//  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
+  Serial.print("Setting soft-AP ... ");
+  //Serial.println(WiFi.softAP("silvia","Passw0rd") ? "Ready" : "Failed!");
+  WiFi.softAP("silvia","Passw0rd");
+
+  gOutputPwr=0;
+
+
 
   /*if (!saveConfig()) {
     Serial.println("Failed to save config");
@@ -118,7 +117,7 @@ void setup()
    
   Serial.println("Settin up PID...");
 
-  //WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.println("");
   Serial.print("MAC address: ");
   Serial.println(WiFi.macAddress());
@@ -127,6 +126,7 @@ void setup()
     delay(500);
     Serial.print(".");
   }*/
+  delay(5000);
   
   Serial.println("");
   Serial.println("WiFi connected.");
