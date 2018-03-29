@@ -14,10 +14,6 @@
 #define WIFI_PASS "Passw0rd"
 
 
-/*IPAddress local_IP(192,168,0,1);
-IPAddress gateway(192,168,0,9);
-IPAddress subnet(255,255,255,0);*/
-
 // options for special modules
 #define ENABLE_JSON
 #define ENABLE_HTTP
@@ -39,14 +35,13 @@ IPAddress subnet(255,255,255,0);*/
 #define S_aP 100.0
 #define S_aI 0.0
 #define S_aD 0.0
-#define S_TSET 27.0
+#define S_TSET 99.0
 #define S_TBAND 1.5
 
 //
 // Intervals for I/O
 //
 #define HEATER_INTERVAL 1000
-//#define HEATER_INTERVAL 10000 bad computing
 #define DISPLAY_INTERVAL 1000
 #define PID_INTERVAL 200 //in how interval is power changed
 
@@ -76,6 +71,8 @@ PID ESPPID(&gInputTemp, &gOutputPwr, &gTargetTemp, gP, gI, gD, DIRECT);
 
 void setup()
 {
+  gOutputPwr=0;
+  
   Serial.begin(115200);
 
 
@@ -86,15 +83,8 @@ void setup()
     Serial.println("Mounted.");
   }
   
-  //WiFi.softAPConfig(local_IP, gateway, subnet);
-  //WiFi.softAP("silvia","Passw0rd");
-//  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
   Serial.print("Setting soft-AP ... ");
-  //Serial.println(WiFi.softAP("silvia","Passw0rd") ? "Ready" : "Failed!");
   WiFi.softAP("silvia","Passw0rd");
-
-  gOutputPwr=0;
-
 
 
   /*if (!saveConfig()) {
@@ -126,7 +116,7 @@ void setup()
     delay(500);
     Serial.print(".");
   }*/
-  delay(5000);
+  delay(2000);
   
   Serial.println("");
   Serial.println("WiFi connected.");
