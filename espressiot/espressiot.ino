@@ -5,8 +5,12 @@
 // Uses PID library
 //
 
+#define ARDUINO_UNO
+
 #include <PID_v1.h>
+#ifndef ARDUINO_UNO
 #include <ESP8266WiFi.h>
+#endif
 
 // WIFI
 
@@ -16,11 +20,11 @@
 
 // options for special modules
 #define ENABLE_JSON
-#define ENABLE_HTTP
+//#define ENABLE_HTTP
 //#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
-//#define SIMULATION_MODE
+#define SIMULATION_MODE
 
 // defines to select sensor types or interface parameters
 //#define SENS_TSIC
@@ -75,17 +79,15 @@ void setup()
   
   Serial.begin(115200);
 
-
+#ifndef ARDUINO_UNO
   Serial.println("Mounting SPIFFS...");
   if(!prepareFS()) {
     Serial.println("Failed to mount SPIFFS !");
   } else {
     Serial.println("Mounted.");
   }
-  
   Serial.print("Setting soft-AP ... ");
   WiFi.softAP("silvia","Passw0rd");
-
 
   /*if (!saveConfig()) {
     Serial.println("Failed to save config");
@@ -104,7 +106,7 @@ void setup()
   } else {
     Serial.println("Config loaded");
   }
-   
+
   Serial.println("Settin up PID...");
 
   WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -122,6 +124,8 @@ void setup()
   Serial.println("WiFi connected.");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
+
+#endif
 
   #ifdef ENABLE_HTTP
   setupWebSrv();

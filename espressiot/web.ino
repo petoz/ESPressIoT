@@ -6,6 +6,7 @@
 //
 
 #ifdef ENABLE_HTTP
+#ifndef ARDUINO_UNO
 
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
@@ -229,4 +230,4 @@ void loopWebSrv() {
 }
 
 #endif
-
+#endif

@@ -6,6 +6,7 @@
 //
 
 #ifdef ENABLE_JSON
+#ifndef ARDUINO_UNO
 
 #include <ArduinoJson.h>
 #include "FS.h"
@@ -84,4 +85,5 @@ void resetConfig() {
  gOvershoot=S_TBAND;
 }
 
+#endif
 #endif
