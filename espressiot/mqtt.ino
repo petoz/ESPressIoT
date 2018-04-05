@@ -67,7 +67,7 @@ void MQTT_callback(char* topic, byte* payload, unsigned int length) {
 
 void setupMQTT(){
   //client.setServer("192.168.1.31", 1883);
-  client.setServer("192.168.29.135", 1883); //mqtt server address
+  client.setServer("127.0.0.1", 1883); //mqtt server address
   client.setCallback(MQTT_callback);  
 }
 

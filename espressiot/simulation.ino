@@ -22,6 +22,7 @@ void setupSensor() {
 
 void setupHeater() {
   heatcycles = 0;
+  pinMode(HEAT_RELAY_PIN , OUTPUT);
 }
 
 void updateTempSensor() {
@@ -31,11 +32,28 @@ void updateTempSensor() {
   }  
 }
 
+#ifndef ARDUINO_UNO
 void updateHeater() {
   heatCurrentTime = time_now;
   if(heatCurrentTime - heatLastTime >= 1000 or heatLastTime > heatCurrentTime) {
     heaterSavedState = getHeatCycles();
+    _turnHeatElementOnOff(0);
     heatLastTime = heatCurrentTime;   
+  }
+}
+#endif
+
+void updateHeater() {
+  boolean h;
+  heatCurrentTime = time_now;
+  if(heatCurrentTime - heatLastTime >= 1000 or heatLastTime > heatCurrentTime) {
+    // begin cycle
+    heaterSavedState = getHeatCycles();
+    _turnHeatElementOnOff(1);  // 
+    heatLastTime = heatCurrentTime;   
+  } 
+  if (heatCurrentTime - heatLastTime >= heatcycles) {
+    _turnHeatElementOnOff(0);
   }
 }
 
