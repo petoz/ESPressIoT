@@ -25,33 +25,31 @@ int CntT = 0;
 uint16_t raw_temp = 0;
 unsigned long lastSensTime;
 
-void setupSensor() {  
-  lastSensTime=millis();
-}
+void setupSensor() { lastSensTime = millis(); }
 
 void updateTempSensor() {
-  if (abs(millis() - lastSensTime) >= TSIC_SMP_TIME) {
-    if(TSens1.getTemperature(&raw_temp)) {
+  if (millis() - lastSensTime >= TSIC_SMP_TIME) {
+    if (TSens1.getTemperature(&raw_temp)) {
       float curT = TSens1.calc_Celsius(&raw_temp);
 
-      // very simple selection of noise hits/invalid values 
-      if(abs(curT-lastT)<1.0 || lastT<1) {
-        SumT+=curT;
-        CntT++;        
-      }     
-      lastSensTime=millis();
+      // very simple selection of noise hits/invalid values
+      if (abs(curT - lastT) < 1.0 || lastT < 1) {
+        SumT += curT;
+        CntT++;
+      }
+      lastSensTime = millis();
     }
-  }  
+  }
 }
 
 float getTemp() {
-  float retVal=gInputTemp;
+  float retVal = gInputTemp;
 
-  if(CntT>=1) {
-    retVal=(SumT/CntT);
-    SumT=0.;
-    CntT=0;
-  }  
+  if (CntT >= 1) {
+    retVal = (SumT / CntT);
+    SumT = 0.;
+    CntT = 0;
+  }
 
   return retVal;
 }

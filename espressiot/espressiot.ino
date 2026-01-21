@@ -5,7 +5,7 @@
 // Uses PID library
 //
 
-#define ARDUINO_UNO
+// #define ARDUINO_UNO
 
 #include <PID_v1.h>
 #ifndef ARDUINO_UNO
@@ -17,17 +17,16 @@
 #define WIFI_SSID "espwifi"
 #define WIFI_PASS "Passw0rd"
 
-
 // options for special modules
 #define ENABLE_JSON
-//#define ENABLE_HTTP
-//#define ENABLE_MQTT
+#define ENABLE_HTTP
+#define ENABLE_MQTT
 
 // use simulation or real heater and sensors
-#define SIMULATION_MODE
+// #define SIMULATION_MODE
 
 // defines to select sensor types or interface parameters
-//#define SENS_TSIC
+// #define SENS_TSIC
 #define SENS_DALLAS
 
 //
@@ -47,21 +46,20 @@
 //
 #define HEATER_INTERVAL 1000
 #define DISPLAY_INTERVAL 1000
-#define PID_INTERVAL 200 //in how interval is power changed
-
+#define PID_INTERVAL 200 // in how interval is power changed
 
 //
 // global variables
 //
-double gTargetTemp=S_TSET;
-double gOvershoot=S_TBAND;
-double gInputTemp=20.0;
-double gOutputPwr=0.0;
+double gTargetTemp = S_TSET;
+double gOvershoot = S_TBAND;
+double gInputTemp = 20.0;
+double gOutputPwr = 0.0;
 double gP = S_P, gI = S_I, gD = S_D;
 double gaP = S_aP, gaI = S_aI, gaD = S_aD;
 
-unsigned long time_now=0;
-unsigned long time_last=0;
+unsigned long time_now = 0;
+unsigned long time_last = 0;
 
 boolean tuning = false;
 boolean osmode = false;
@@ -72,22 +70,20 @@ boolean poweroffMode = false;
 //
 PID ESPPID(&gInputTemp, &gOutputPwr, &gTargetTemp, gP, gI, gD, DIRECT);
 
+void setup() {
+  gOutputPwr = 0;
 
-void setup()
-{
-  gOutputPwr=0;
-  
   Serial.begin(115200);
 
 #ifndef ARDUINO_UNO
   Serial.println("Mounting SPIFFS...");
-  if(!prepareFS()) {
+  if (!prepareFS()) {
     Serial.println("Failed to mount SPIFFS !");
   } else {
     Serial.println("Mounted.");
   }
   Serial.print("Setting soft-AP ... ");
-  WiFi.softAP("silvia","Passw0rd");
+  WiFi.softAP("silvia", "Passw0rd");
 
   /*if (!saveConfig()) {
     Serial.println("Failed to save config");
@@ -97,9 +93,10 @@ void setup()
 
   Serial.println("Loading config...");
   if (!loadConfig()) {
-    Serial.println("Failed to load config. Using default values and creating config...");
+    Serial.println(
+        "Failed to load config. Using default values and creating config...");
     if (!saveConfig()) {
-     Serial.println("Failed to save config");
+      Serial.println("Failed to save config");
     } else {
       Serial.println("Config saved");
     }
@@ -119,7 +116,7 @@ void setup()
     Serial.print(".");
   }*/
   delay(2000);
-  
+
   Serial.println("");
   Serial.println("WiFi connected.");
   Serial.print("IP address: ");
@@ -127,13 +124,13 @@ void setup()
 
 #endif
 
-  #ifdef ENABLE_HTTP
+#ifdef ENABLE_HTTP
   setupWebSrv();
-  #endif
-  
-  #ifdef ENABLE_MQTT
+#endif
+
+#ifdef ENABLE_MQTT
   setupMQTT();
-  #endif
+#endif
 
   // setup components
   setupHeater();
@@ -144,67 +141,68 @@ void setup()
   ESPPID.SetSampleTime(PID_INTERVAL);
   ESPPID.SetOutputLimits(0, 1000);
   ESPPID.SetMode(AUTOMATIC);
- 
-  time_now=millis();
-  time_last=time_now;
-    
+
+  time_now = millis();
+  time_last = time_now;
 }
 
 void serialStatus() {
-  Serial.print(gInputTemp, 2); Serial.print(" ");
-  Serial.print(gTargetTemp, 2); Serial.print(" ");
-  Serial.print(gOutputPwr, 2); Serial.print(" ");
-  Serial.print(gP, 2); Serial.print(" ");
-  Serial.print(gI, 2); Serial.print(" ");
-  Serial.print(gD, 2); Serial.print(" ");
-  Serial.print(ESPPID.GetKp(), 2); Serial.print(" ");
-  Serial.print(ESPPID.GetKi(), 2); Serial.print(" ");
+  Serial.print(gInputTemp, 2);
+  Serial.print(" ");
+  Serial.print(gTargetTemp, 2);
+  Serial.print(" ");
+  Serial.print(gOutputPwr, 2);
+  Serial.print(" ");
+  Serial.print(gP, 2);
+  Serial.print(" ");
+  Serial.print(gI, 2);
+  Serial.print(" ");
+  Serial.print(gD, 2);
+  Serial.print(" ");
+  Serial.print(ESPPID.GetKp(), 2);
+  Serial.print(" ");
+  Serial.print(ESPPID.GetKi(), 2);
+  Serial.print(" ");
   Serial.print(ESPPID.GetKd(), 2);
   Serial.println("");
 }
 
 void loop() {
-  time_now=millis();
+  time_now = millis();
 
-  updateTempSensor(); 
-  gInputTemp=getTemp();
+  updateTempSensor();
+  gInputTemp = getTemp();
 
-  if(abs(time_now-time_last)>=PID_INTERVAL or time_last > time_now) {
-    if(poweroffMode==true) {
-      gOutputPwr=0;
+  if (time_now - time_last >= PID_INTERVAL) {
+    if (poweroffMode == true) {
+      gOutputPwr = 0;
       setHeatPowerPercentage(0);
-    }
-    else if(tuning==true)
-    {
+    } else if (tuning == true) {
       tuning_loop();
-    }
-    else  {
-      if( !osmode && abs(gTargetTemp-gInputTemp)>=gOvershoot ) {        
+    } else {
+      if (!osmode && abs(gTargetTemp - gInputTemp) >= gOvershoot) {
         ESPPID.SetTunings(gaP, gaI, gaD);
-        osmode=true;
+        osmode = true;
+      } else if (osmode && abs(gTargetTemp - gInputTemp) < gOvershoot) {
+        ESPPID.SetTunings(gP, gI, gD);
+        osmode = false;
       }
-      else if( osmode && abs(gTargetTemp-gInputTemp)<gOvershoot ) {
-        ESPPID.SetTunings(gP,gI,gD);
-        osmode=false;
-      }
-      if(ESPPID.Compute()==true) {   
+      if (ESPPID.Compute() == true) {
         setHeatPowerPercentage(gOutputPwr);
       }
-    }        
-    
-    #ifdef ENABLE_MQTT
+    }
+
+#ifdef ENABLE_MQTT
     loopMQTT();
-    #endif
-    
+#endif
+
     serialStatus();
-    time_last=time_now;
+    time_last = time_now;
   }
 
   updateHeater();
-  
-  #ifdef ENABLE_HTTP
-  loopWebSrv();
-  #endif 
-  
-}
 
+#ifdef ENABLE_HTTP
+  loopWebSrv();
+#endif
+}
